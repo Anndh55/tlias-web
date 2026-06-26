@@ -31,7 +31,7 @@
 
     <!-- 员工表格 -->
     <el-card shadow="never">
-      <el-table :data="empList" stripe v-loading="loading">
+      <el-table :data="empList" stripe v-loading="loading" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="name" label="姓名" width="100" />
         <el-table-column label="性别" width="60">
@@ -244,6 +244,10 @@ const handleDelete = (id) => {
       ElMessage.success('删除成功')
       await fetchData()
     }).catch(() => {})
+}
+
+const handleSelectionChange = (selection) => {
+  selectedIds.value = selection.map(item => item.id)
 }
 
 const handleBatchDelete = () => {
