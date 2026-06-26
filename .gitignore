@@ -1,2 +1,6 @@
 node_modules
 dist
+
+.impeccable/
+DESIGN.md
+PRODUCT.md
