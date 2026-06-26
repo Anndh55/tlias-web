@@ -1,0 +1,10 @@
+﻿{
+    "files":  [
+                  "index.html"
+              ],
+    "insertBefore":  "\u003c/head\u003e",
+    "generatedAt":  "2026-06-26T11:21:21.7496677+08:00",
+    "commentSyntax":  "html",
+    "cspChecked":  false,
+    "schemaVersion":  2
+}
