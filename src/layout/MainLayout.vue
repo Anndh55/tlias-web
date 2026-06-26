@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="layout-container">
     <!-- 侧边栏 -->
     <div class="sidebar" :class="{ collapsed: isCollapse }" :style="{ width: isCollapse ? '64px' : '220px' }">
@@ -64,7 +64,8 @@
         </div>
         <div class="topbar-right">
           <span class="user-info">
-            <el-icon><Avatar /></el-icon>
+            <el-avatar v-if="avatarUrl" :src="avatarUrl" :size="26" shape="square" style="border-radius: 6px;" />
+            <span v-else class="avatar-fallback">{{ user?.name?.[0] || '?' }}</span>
             {{ user?.name || '未登录' }}
           </span>
           <el-button class="logout-btn" size="small" @click="handleLogout">退出登录</el-button>
@@ -80,12 +81,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { getEmpAPI } from '../api/emp.js'
 
 const router = useRouter()
 const route = useRoute()
 const isCollapse = ref(false)
+const avatarUrl = ref('')
 
 const user = JSON.parse(localStorage.getItem('user') || '{}')
 
@@ -93,11 +96,25 @@ const activeMenu = computed(() => route.path)
 
 const currentTitle = computed(() => route.meta?.title || '首页')
 
+const fetchAvatar = async () => {
+  if (!user.id) return
+  try {
+    const res = await getEmpAPI(user.id)
+    if (res.code === 1 && res.data?.image) {
+      avatarUrl.value = res.data.image
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
 const handleLogout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('user')
   router.push('/login')
 }
+
+onMounted(fetchAvatar)
 </script>
 
 <style scoped>
@@ -260,16 +277,26 @@ const handleLogout = () => {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 14px;
   color: #606266;
 }
 
-.user-info .el-icon {
-  font-size: 18px;
-  color: #8b8fa3;
-}
 
+
+.avatar-fallback {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #409eff, #79bbff);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 .logout-btn {
   border-radius: 8px;
   font-family: inherit;
