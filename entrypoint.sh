@@ -1,4 +1,6 @@
 #!/bin/bash
+export VITE_API_PROXY_TARGET=${VITE_API_PROXY_TARGET:-http://tlias.ns-jnrdqssh:8080}
+
 app_env=${1:-development}
 
 # Development environment commands
